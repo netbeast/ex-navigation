@@ -288,7 +288,8 @@ As you saw above, you can `push` and `pop` routes. The following is a
 full list of functions that can be called on StackNavigation navigators.
 
 - `push`: add a route to the top of the stack
-- `pop`: remove the route at the top of the stack
+- `pop(n)`: remove n routes from the top of the stack, defaults to 1
+- `popToTop`: remove all but the first route from the stack
 - `replace`: replace the current route with a given route
 - `showLocalAlert`: show an alert bar with given text and styles
 - `hideLocalAlert`: hide an active alert bar
@@ -374,6 +375,8 @@ drawer button icons.
 be visible for this route.
 - `translucent` - iOS and Exponent only, use background blur on the
 `navigationBar`, like in the Apple Podcasts app, for example.
+- `borderBottomWidth` - the width of the bottom border
+- `borderBottomColor` - the color of the bottom border
 - `renderLeft` - a function that should return a React component that
 will be rendered in the left position of the `navigationBar`.
 - `renderTitle` - a function that should return a React component that
@@ -603,21 +606,21 @@ export const Router = createRouter(() => ({
 
 ```diff
  /* The top level of your app, often in main.js or index.[ios/android].js */
- 
+
  import {
    NavigationContext,
    NavigationProvider,
    StackNavigation,
  } from '@exponent/ex-navigation';
- 
+
  import Store from './state/Store';
  import Router from './Router';
- 
+
 +const navigationContext = new NavigationContext({
 +  router: Router,
 +  store: Store,
 +})
- 
+
  return (
    <Provider store={Store}>
 +    <NavigationProvider context={navigationContext}>

@@ -223,6 +223,7 @@ export default class ExNavigationBar extends PureComponent {
 
     let styleFromRouteConfig = this.props.latestRoute.getBarStyle();
     let isTranslucent = !!this.props.latestRoute.getTranslucent();
+    let translucentTint = this.props.latestRoute.getTranslucentTint();
     let backgroundStyle = isTranslucent ? styles.appbarTranslucent : styles.appbarSolid;
     let containerStyle = [styles.appbar, backgroundStyle, style, {height}, styleFromRouteConfig];
 
@@ -242,10 +243,16 @@ export default class ExNavigationBar extends PureComponent {
     });
 
     const backgroundComponents = scenesProps.map(this._renderBackground, this);
+    const wrapperStyle = [styles.wrapper, { paddingTop: APPBAR_HEIGHT + this.props.statusBarHeight }];
 
     return (
-      <View pointerEvents={this.props.visible ? 'auto' : 'none'} style={styles.wrapper}>
-        {isTranslucent && <Components.BlurView style={[styles.translucentUnderlay, {height}]} />}
+      <View pointerEvents={this.props.visible ? 'auto' : 'none'} style={wrapperStyle}>
+        {isTranslucent && (
+          <Components.BlurView
+            tintEffect={translucentTint}
+            style={[styles.translucentUnderlay, {height}]}
+          />
+        )}
 
         <Animated.View style={containerStyle}>
           {backgroundComponents}
@@ -370,7 +377,6 @@ export default class ExNavigationBar extends PureComponent {
   }
 }
 
-
 ExNavigationBar.DEFAULT_HEIGHT = APPBAR_HEIGHT + STATUSBAR_HEIGHT;
 ExNavigationBar.DEFAULT_HEIGHT_WITHOUT_STATUS_BAR = APPBAR_HEIGHT;
 ExNavigationBar.DEFAULT_BACKGROUND_COLOR = BACKGROUND_COLOR;
@@ -386,7 +392,6 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    paddingTop: ExNavigationBar.DEFAULT_HEIGHT,
     // TODO(brentvatne): come up with a better solution for making the
     // elevation show up properly on Android
     paddingBottom: Platform.OS === 'android' ? 16 : 0,

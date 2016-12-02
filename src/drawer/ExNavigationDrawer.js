@@ -63,6 +63,7 @@ type Props = {
   initialItem: string,
   renderHeader: () => React.Element<any>,
   renderNavigationView: () => React.Element<any>,
+  drawerBackgroundColor: string,
   drawerWidth: 300,
   drawerStyle: any,
   children: Array<React.Element<any>>,
@@ -92,6 +93,7 @@ class ExNavigationDrawer extends PureComponent<any, Props, State> {
 
   static defaultProps = {
     drawerPosition: 'left',
+    drawerBackgroundColor: '#fff',
     renderHeader() {
       return null;
     },
@@ -141,6 +143,7 @@ class ExNavigationDrawer extends PureComponent<any, Props, State> {
       renderHeader: this.props.renderHeader,
       selectedItem: navigationState.routes[navigationState.index].key,
       items: this.state.drawerItems,
+      drawerBackgroundColor: this.props.drawerBackgroundColor,
       drawerPosition: this.props.drawerPosition,
       width: this.props.drawerWidth,
       renderNavigationView: this.props.renderNavigationView,
@@ -257,6 +260,10 @@ class ExNavigationDrawer extends PureComponent<any, Props, State> {
 
   _parseDrawerItems(props) {
     const drawerItems = Children.map(props.children, (child, index) => {
+      if (!child) {
+        return null;
+      }
+
       invariant(
         child.type === ExNavigationDrawerItem,
         'All children of DrawerNavigation must be DrawerNavigationItems.',
